@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Dezoomed JVMERDE Edition
 // @namespace    http://tampermonkey.net/
-// @version      2.2
-// @author       BlackArch + Bakuredo + StrangerFruit + captain_cid31 + herolink + Can-02
+// @version      2.3
+// @author       StrangerFruit + BlackArch + Bakuredo + captain_cid31 + herolink + Can-02
 // @description  Tentative de rendre l'UI le plus agréable possible
 // @match        https://www.jeuxvideo.com/forums/0-*
 // @match        https://www.jeuxvideo.com/forums/42-*
@@ -27,7 +27,7 @@
         `);
     }
 
-    // ... reste de ton code
+   
 })();
 
 (function() {
@@ -42,32 +42,6 @@
         /* Dé-stickifier la barre native */
         .buttonsNavbar__sticky { position: relative !important; top: 0 !important; }
 
-        /* ── Barre bas : thème sombre (défaut) ── */
-        #old-jvc-bar-v22 {
-            display: flex; gap: 10px; margin: 20px 0; padding: 12px;
-            background: #1e2125; border: 1px solid #32373d; border-radius: 4px; align-items: center;
-        }
-        .btn-jvc-v22 {
-            background: #32373d; color: #fff !important; border: 1px solid #454d55;
-            padding: 7px 15px; font-size: 13px; font-weight: bold; text-decoration: none !important;
-            border-radius: 3px; cursor: pointer; display: inline-flex; align-items: center;
-        }
-        .btn-grey { background: #555 !important; border-color: #777 !important; }
-        #jvmerde-refresh-status { font-size: 11px; color: #888; margin-left: auto; white-space: nowrap; }
-
-        /* ── Barre bas : thème sombre par défaut via media query, clair si light ── */
-        @media (prefers-color-scheme: light) {
-            #old-jvc-bar-v22 { background: #e8e8e8 !important; border-color: #ccc !important; }
-            .btn-jvc-v22 { background: #d0d0d0 !important; color: #1a1a1a !important; border-color: #aaa !important; }
-            #jvmerde-refresh-status { color: #555 !important; }
-        }
-        /* Classe JVC explicite — priorité sur le media query */
-        html.theme-dark #old-jvc-bar-v22 { background: #1e2125 !important; border-color: #32373d !important; }
-        html.theme-dark .btn-jvc-v22 { background: #32373d !important; color: #fff !important; border-color: #454d55 !important; }
-        html.theme-dark #jvmerde-refresh-status { color: #888 !important; }
-        html.theme-light #old-jvc-bar-v22 { background: #e8e8e8 !important; border-color: #ccc !important; }
-        html.theme-light .btn-jvc-v22 { background: #d0d0d0 !important; color: #1a1a1a !important; border-color: #aaa !important; }
-        html.theme-light #jvmerde-refresh-status { color: #555 !important; }
 
 
     .tablesForum__cellSubject {
@@ -130,12 +104,21 @@
 
 .messageUser__msg span.message__urlImg {
     display: inline-block !important;
-    width: 200px !important;
-    height: 150px !important;
-    background-size: contain !important;
-    background-repeat: no-repeat !important;
-    background-position: center !important;
+            width: 68px !important;
+            height: 51px !important;
+            padding-bottom: 0 !important;
+            border-radius:0rem !important;
+            background-color:#000; !important;
+            background-size: contain !important;
+            background-repeat: no-repeat !important;
+            background-position: center !important;
 }
+
+    .message__urlImgSticker {
+            max-width:83px !important; max-height:62px !important;
+            min-width:68px !important; min-height:51px !important;
+            border-radius:0rem !important;
+        }
 
   .messageUser__msg a span.message__urlImgLarge {
             height: 150px;
