@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Dezoomed JVMERDE Edition
 // @namespace    http://tampermonkey.net/
-// @version      2.4.5
+// @version      2.5
 // @author       StrangerFruit + BlackArch + Bakuredo + captain_cid31 + herolink + Can-02
 // @description  Tentative de rendre l'UI le plus agréable possible
 // @match        https://www.jeuxvideo.com/forums/0-*
@@ -12,9 +12,9 @@
 // @downloadURL  https://raw.githubusercontent.com/DreamboxMinerva/Dezoomed-JVMERDE-Edition/main/Dezoomed-JVMERDE-Edition.user.js
 // @grant        GM_addStyle
 // @run-at       document-start
-// ==/UserScript==
 
-// ==/UserScript==
+
+
 
 (function() {
     'use strict';
