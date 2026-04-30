@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Dezoomed JVMERDE Edition
 // @namespace    http://tampermonkey.net/
-// @version      2.3
+// @version      2.4
 // @author       StrangerFruit + BlackArch + Bakuredo + captain_cid31 + herolink + Can-02
 // @description  Tentative de rendre l'UI le plus agréable possible
 // @match        https://www.jeuxvideo.com/forums/0-*
@@ -27,7 +27,7 @@
         `);
     }
 
-   
+
 })();
 
 (function() {
@@ -196,6 +196,80 @@ body.jvmerde-nosidebar .layout__row--gutter.layout__contentAside { display: none
     font-size: 1.1953125rem;
     font-weight: 700;;
 }
+
+
+
+.layout__contentAside.layout__row--gutter {
+
+    margin-left: 6px;
+}
+
+
+
+.layout--videoLarge .layout__contentMain, .layout--alternate .layout__contentHeader, .layout--alternate .layout__contentBefore, .layout--alternate .layout__contentMainMedia, .layout--alternate .layout__contentMainMediaContainer, .layout--alternate .layout__contentMain, .layout--forum .layout__contentMainMedia, .layout--forum .layout__contentMainMediaContainer, .layout--forum .layout__contentMain, .layout--classic .layout__contentMainMedia, .layout--classic .layout__contentMainMediaContainer, .layout--classic .layout__contentMain {
+    margin-left: -6px;
+}
+
+
+.buttonsNavbar {
+    background-color: #272A30 ;
+}
+
+.tablesForum,
+.buttonsNavbar,
+.sideCardForum__body,
+.messageEditor__containerEdit,
+.messageEditor__containerPreview,
+.survey__addSurvey,
+.topicTitle__input
+{
+    border-radius: 8px;
+}
+
+.forumSearchBar__form,
+.messageUser__card,
+.buttonsNavbar__button,
+.simpleButton
+{
+    border-radius: 10px;
+}
+
+
+.userParameters {
+    border-radius: 12px;
+}
+
+.forumSearchBar__formInput {
+  padding-top: 4px;
+}
+
+.buttonsNavbar__button {
+    color: #f2f2f2;
+    background-color: #272A30;
+    margin: 0 0.3125rem;
+   height: 40px;
+    padding: 12px;
+}
+
+.buttonsNavbar__label {
+    display: block;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1;
+}
+
+.buttonsNavbar__button--highlighted:hover,
+.buttonsNavbar__button--highlighted:active,
+.buttonsNavbar__button--highlighted:focus {
+    background-color: #272A30 !important; /* orange pastel */
+    color: #F66031 !important;
+}
+
+.buttonsNavbar__button:has(.icon-refresh):hover {
+    background-color: #272A30 !important; /* orange pastel */
+    color: #F66031 !important;
+}
+
 
 
     `);
