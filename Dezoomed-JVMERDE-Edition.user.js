@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Dezoomed JVMERDE Edition
 // @namespace    http://tampermonkey.net/
-// @version      2.1
+// @version      2.2
 // @author       BlackArch + Bakuredo + StrangerFruit + captain_cid31 + herolink + Can-02
 // @description  Tentative de rendre l'UI le plus agréable possible
 // @match        https://www.jeuxvideo.com/forums/0-*
@@ -13,6 +13,22 @@
 // @grant        GM_addStyle
 // @run-at       document-start
 // ==/UserScript==
+
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    if (location.pathname.includes('/forums/42-')) {
+        GM_addStyle(`
+            .icon-trash {  color: #e4606d !important;
+                filter:   brightness(0.80) !important;
+            }
+        `);
+    }
+
+    // ... reste de ton code
+})();
 
 (function() {
     'use strict';
@@ -126,6 +142,41 @@
             width: 200px;
             padding-bottom: 0;
             display:inline-block;}
+
+
+      /* ───────────────────────────────────────────── */
+        /* ICÔNES COLORÉES - Sans bordure, sans fond */
+        /* Kick (orange), Supprimer (rouge), Restaurer (vert) */
+        /* ───────────────────────────────────────────── */
+
+        /* Suppression de TOUTES les bordures et backgrounds sur les boutons concernés */
+        .messageUser__action:has(.icon-kick),
+        .messageUser__action:has(.icon-trash),
+        .messageUser__action:has(.icon-topic-restore) {
+            border: none !important;
+            background: none !important;
+            background-color: transparent !important;
+            box-shadow: none !important;
+            outline: none !important;
+        }
+
+        /* Icône KICK - ORANGE */
+        .icon-kick {
+            filter: invert(58%) sepia(98%) saturate(2000%) hue-rotate(0deg) brightness(0.80) !important;
+        }
+
+/* Icône DDB - Rouge */
+        .icon-signaler  {
+            color: #D7D764 !important;
+           filter: brightness(0.80) !important;
+        }
+
+
+
+        /* Icône RESTAURER - VERT */
+        .icon-topic-restore {
+            filter: invert(58%) sepia(78%) saturate(600%) hue-rotate(70deg) brightness(0.80) !important;
+        }
 
         /* ── Divers ── */
         .tablesForum__remainingAvatars, .tablesForum__separator { display: none !important; }
