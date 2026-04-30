@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Dezoomed JVMERDE Edition
 // @namespace    http://tampermonkey.net/
-// @version      2.0
+// @version      2.1
 // @author       BlackArch + Bakuredo + StrangerFruit + captain_cid31 + herolink + Can-02
 // @description  Tentative de rendre l'UI le plus agréable possible
 // @match        https://www.jeuxvideo.com/forums/0-*
@@ -56,6 +56,8 @@
         padding-top: 0.5px;
       padding-bottom: 0.5px;
     }
+
+
 
         /* ── Messages : grid pour footer en haut à droite ── */
         .messageUser__card {
@@ -117,6 +119,11 @@
     background-position: center !important;
 }
 
+  .messageUser__msg a span.message__urlImgLarge {
+            height: 150px;
+            width: 200px;
+            padding-bottom: 0;
+            display:inline-block;}
 
         /* ── Divers ── */
         .tablesForum__remainingAvatars, .tablesForum__separator { display: none !important; }
@@ -324,7 +331,24 @@ body.jvmerde-nosidebar .layout__row--gutter.layout__contentAside { display: none
 
 })();
 
+function Citations() {
+const posts = JSON.parse(atob(unsafeWindow.jvc.forumsAppPayload)).listMessage;
+const mapPosts= new Map(posts.map(m => [m.id, m]));
 
+document.addEventListener('click', function(e) {
+    const bouton = e.target.closest('.messageUser__action[title="Citer le message"]');
+    if (!bouton) return;
+    e.stopImmediatePropagation();
+    e.preventDefault();
+
+    const post = bouton.closest(".messageUser__card");
+    const pseudo = post.querySelector(".messageUser__label").textContent;
+    const texte = mapPosts.get(parseInt(post.querySelector('a.messageUser__date')?.href.match(/\/message\/(\d+)/)?.[1]));
+    const citation = `> Le ${texte.publishedDate} ${pseudo} a écrit :\n> ${texte.text.split("\n").join("\n> ")}\n\n`;
+
+    unsafeWindow.jvc.getMessageEditor(".messageEditor__edit").insertText(citation);
+}, true);
+}
 
 // ═══════════════════════════════════════════════════
 // CITATION AVEC PSEUDO — par captain_cid31 & can-02 & herolink
@@ -349,5 +373,6 @@ function Citations() {
         unsafeWindow.jvc.getMessageEditor(".messageEditor__edit").insertText(citation);
     }, true);
 }
+
 
 Citations();
