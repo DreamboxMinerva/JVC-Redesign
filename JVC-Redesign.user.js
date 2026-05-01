@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         JVC Redesign - Refonte de l'interface du forum
 // @namespace    http://tampermonkey.net/
-// @version      2.81
+// @version      2.85
 // @author       StrangerFruit + BlackArch + Bakuredo + captain_cid31 + herolink + Can-02
 // @description  Tentative de rendre l'UI le plus agréable possible
 // @match        https://www.jeuxvideo.com/forums/0-*
@@ -31,16 +31,13 @@
 (function() {
     'use strict';
 
-    let nosidebarEnabled     = localStorage.getItem('jvmerde-nosidebar') === 'on';
-    let pendingNewMessages   = 0;
-    let roueBtnListenerAdded = false;
 
     GM_addStyle(`
         /* Dé-stickifier la barre native */
         .buttonsNavbar__sticky {
             position: relative !important;
             top: 0 !important;
-            order: 0;
+            order: 0 !important;
         }
 
         /* Contrer le forçage mobile du site :
@@ -56,8 +53,8 @@
         }
 
         .tablesForum__cellSubject {
-            padding-top: 0.5px;
-            padding-bottom: 0.5px;
+            padding-top: 0.5px !important;
+            padding-bottom: 0.5px !important;
         }
 
         /* ── Messages : grid pour footer en haut à droite ── */
@@ -127,10 +124,10 @@
         }
 
         .messageUser__msg a span.message__urlImgLarge {
-            height: 150px;
-            width: 200px;
-            padding-bottom: 0;
-            display: inline-block;
+            height: 150px !important;
+            width: 200px !important;
+            padding-bottom: 0 !important;
+            display: inline-block !important;
         }
 
         /* ───────────────────────────────────────────── */
@@ -193,13 +190,13 @@
 
         .tablesForum__bodyRow a:visited { color: var(--jv-text-muted-color) !important; }
         .messageUser__label {
-            display: inline;
-            font-size: 1.1953125rem;
-            font-weight: 700;
+            display: inline !important;
+            font-size: 1.1953125rem !important;
+            font-weight: 700 !important;
         }
 
         .layout__contentAside.layout__row--gutter {
-            margin-left: 6px;
+            margin-left: 6px !important;
         }
 
         .layout--videoLarge .layout__contentMain,
@@ -214,11 +211,11 @@
         .layout--classic .layout__contentMainMedia,
         .layout--classic .layout__contentMainMediaContainer,
         .layout--classic .layout__contentMain {
-            margin-left: -6px;
+            margin-left: -6px !important;
         }
 
         .buttonsNavbar {
-            background-color: #272A30;
+            background-color: #272A30 !important;
         }
 
         .tablesForum,
@@ -227,38 +224,38 @@
         .messageEditor__containerEdit,
         .messageEditor__containerPreview,
         .survey__addSurvey,
+       .messageUser__card,
         .topicTitle__input {
-            border-radius: 8px;
+            border-radius: 8px !important;
         }
 
         .forumSearchBar__form,
-        .messageUser__card,
         .buttonsNavbar__button,
         .simpleButton {
-            border-radius: 10px;
+            border-radius: 10px !important;
         }
 
         .userParameters {
-            border-radius: 12px;
+            border-radius: 12px !important;
         }
 
         .forumSearchBar__formInput {
-            padding-top: 4px;
+            padding-top: 4px !important;
         }
 
         .buttonsNavbar__button {
-            color: #f2f2f2;
-            background-color: #272A30;
-            margin: 0 0.3125rem;
-            height: 40px;
-            padding: 12px;
+            color: #f2f2f2 !important;
+            background-color: #272A30 !important;
+            margin: 0 0.3125rem !important;
+            height: 40px !important;
+            padding: 12px !important;
         }
 
         .buttonsNavbar__label {
-            display: block;
-            font-size: 15px;
-            font-weight: 500;
-            line-height: 1;
+            display: block !important;
+            font-size: 15px !important;
+            font-weight: 500 !important;
+            line-height: 1 !important;
         }
 
         .buttonsNavbar__button--highlighted:hover,
@@ -287,152 +284,7 @@
         return window.location.href.split('#')[0];
     };
 
-    // ─── Pagination top ────────────────────────────
-    const watchTopPagination = () => {
-        if (!isTopic()) return;
-        const paginationTop = document.querySelector('.js-pagination-top.container__pagination');
-        if (!paginationTop) return;
-        const replacePagination = () => {
-            const bottom = document.querySelector('.container__pagination:not(.js-pagination-top)');
-            if (bottom && paginationTop.innerHTML !== bottom.innerHTML) {
-                paginationTop.innerHTML = bottom.innerHTML;
-            }
-        };
-        replacePagination();
-        const observer = new MutationObserver(() => {
-            observer.disconnect();
-            replacePagination();
-            observer.observe(paginationTop, { childList: true, subtree: true });
-        });
-        observer.observe(paginationTop, { childList: true, subtree: true });
-    };
 
-    // ─── Auto-refresh ──────────────────────────────
-    const isScrolledToBottom = () =>
-        window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 150;
-
-    const setStatus = (msg, clickable = false) => {
-        const el = document.getElementById('jvmerde-refresh-status');
-        if (!el) return;
-        el.textContent = msg;
-        el.style.cursor = clickable ? 'pointer' : 'default';
-        el.style.textDecoration = clickable ? 'underline' : 'none';
-        el.onclick = clickable ? () => location.reload() : null;
-    };
-
-    const updateToggleButton = () => {
-        const btn = document.getElementById('jvmerde-toggle');
-        if (!btn) return;
-        if (autoRefreshEnabled) { btn.textContent = '\u27F3 Auto ON'; btn.classList.remove('btn-grey'); }
-        else { btn.textContent = '\u27F3 Auto OFF'; btn.classList.add('btn-grey'); }
-    };
-
-    const MSG_SELECTOR  = 'div[id^="message-"].messageUser';
-    const REFRESH_DELAY = 30000;
-    let knownIds = new Set();
-
-    const collectExistingPosts = () => {
-        document.querySelectorAll(MSG_SELECTOR).forEach(p => knownIds.add(p.id));
-    };
-
-    const fetchAndInjectNewPosts = async () => {
-        if (!autoRefreshEnabled) return;
-        try {
-            setStatus('\u27F3 Vérification...');
-            const res = await fetch(window.location.href, {
-                cache: 'no-store',
-                credentials: 'include'
-            });
-            if (!res.ok) { setStatus('\u26A0 Erreur ' + res.status); return; }
-            const text = await res.text();
-            const doc  = new DOMParser().parseFromString(text, 'text/html');
-            let added  = 0;
-            doc.querySelectorAll(MSG_SELECTOR).forEach(post => {
-                if (!knownIds.has(post.id)) { knownIds.add(post.id); added++; }
-            });
-            const now = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-            if (added > 0) {
-                pendingNewMessages += added;
-                const shouldReload =
-                    CONFIG.autoRefreshMode === 'force' ||
-                    (CONFIG.autoRefreshMode === 'auto' && isScrolledToBottom());
-                if (shouldReload) {
-                    setStatus(`\u2705 ${pendingNewMessages} nouveau(x) \u2014 ${now}`);
-                    sessionStorage.setItem('jvmerde-scroll', 'bottom');
-                    location.reload();
-                } else {
-                    setStatus(`\u2B07 ${pendingNewMessages} nouveau(x) — cliquer pour voir`, true);
-                }
-            } else {
-                pendingNewMessages = 0;
-                setStatus(`\u27F3 RAS \u2014 ${now}`);
-            }
-        } catch (e) {
-            setStatus('\u26A0 Erreur réseau');
-        }
-    };
-
-    const startAutoRefresh = () => {
-        if (!isTopic()) return;
-        collectExistingPosts();
-        setInterval(fetchAndInjectNewPosts, REFRESH_DELAY);
-    };
-
-    // ─── Menu roue crantée ─────────────────────────
-    const tryAttachRoueListener = () => {
-        if (roueBtnListenerAdded) return;
-        const roueBtn = document.querySelector('.dropdownCustom__button');
-        if (!roueBtn) return;
-        roueBtnListenerAdded = true;
-        roueBtn.addEventListener('click', () => {
-            setTimeout(() => {
-                const menu = document.querySelector('.dropdownCustom__list');
-                if (!menu || menu.querySelector('#jvmerde-dezoom-chk')) return;
-
-                const liSidebar = document.createElement('li');
-                liSidebar.className = 'dropdownCustom__item';
-                liSidebar.innerHTML = `
-                    <div class="userParameters__parameterItem">
-                        <span class="userParameters__parameterText">Cacher la sidebar</span>
-                        <div class="userParameters__switch">
-                            <input type="checkbox" id="jvmerde-nosidebar-chk" class="userParameters__checkbox" ${nosidebarEnabled ? 'checked' : ''}>
-                            <label for="jvmerde-nosidebar-chk" class="userParameters__label"></label>
-                        </div>
-                    </div>`;
-                liSidebar.querySelector('#jvmerde-nosidebar-chk').addEventListener('change', (e) => {
-                    nosidebarEnabled = e.target.checked;
-                    localStorage.setItem('jvmerde-nosidebar', nosidebarEnabled ? 'on' : 'off');
-                    document.body.classList.toggle('jvmerde-nosidebar', nosidebarEnabled);
-                });
-                menu.appendChild(liSidebar);
-            }, 50);
-        });
-    };
-
-    // ─── Init ──────────────────────────────────────
-    window.addEventListener('DOMContentLoaded', () => {
-        if (nosidebarEnabled) document.body.classList.add('jvmerde-nosidebar');
-        document.addEventListener('mousedown', handleMiddleClick, true);
-        if (isTopic()) {
-            injectBottomBar();
-            watchTopPagination();
-            startAutoRefresh();
-            fixLargeStickers();
-            const savedScroll = sessionStorage.getItem('jvmerde-scroll');
-            if (savedScroll === 'bottom') {
-                window.scrollTo(0, document.documentElement.scrollHeight);
-                sessionStorage.removeItem('jvmerde-scroll');
-            }
-        }
-        setTimeout(tryAttachRoueListener, 500);
-        setTimeout(tryAttachRoueListener, 1500);
-        setTimeout(tryAttachRoueListener, 3000);
-    });
-
-    setInterval(() => {
-        if (isTopic()) injectBottomBar();
-        tryAttachRoueListener();
-    }, 5000);
 
 })();
 
