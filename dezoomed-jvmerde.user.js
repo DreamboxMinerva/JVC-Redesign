@@ -1,20 +1,20 @@
 // ==UserScript==
-// @name    Dezoomed JVmerde edition
+// @name         Dezoomed JVMERDE Edition
 // @namespace    http://tampermonkey.net/
-// @version      2.5
+// @version      2.6
 // @author       StrangerFruit + BlackArch + Bakuredo + captain_cid31 + herolink + Can-02
 // @description  Tentative de rendre l'UI le plus agréable possible
 // @match        https://www.jeuxvideo.com/forums/0-*
 // @match        https://www.jeuxvideo.com/forums/42-*
 // @match        https://www.jeuxvideo.com/recherche/forums/0-*
 // @match        https://www.jeuxvideo.com/recherche/forums/42-*
-// @updateURL    https://raw.githubusercontent.com/DreamboxMinerva/Dezoomed-JVMERDE-Edition/main/dezoomed-jvmerde.user.js
-// @downloadURL  https://raw.githubusercontent.com/DreamboxMinerva/Dezoomed-JVMERDE-Edition/main/dezoomed-jvmerde.user.js
+// @updateURL    https://raw.githubusercontent.com/DreamboxMinerva/Dezoomed-JVMERDE-Edition/main/Dezoomed-JVMERDE-Edition.user.js
+// @downloadURL  https://raw.githubusercontent.com/DreamboxMinerva/Dezoomed-JVMERDE-Edition/main/Dezoomed-JVMERDE-Edition.user.js
 // @grant        GM_addStyle
 // @run-at       document-start
+// ==/UserScript==
 
-
-
+// ==/UserScript==
 
 (function() {
     'use strict';
@@ -486,3 +486,4 @@ function Citations() {
 
 
 Citations();
+
