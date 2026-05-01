@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         JVC Redesign - Refonte de l'interface du forum
 // @namespace    http://tampermonkey.net/
-// @version      2.86
+// @version      2.88
 // @author       StrangerFruit + BlackArch + Bakuredo + captain_cid31 + herolink + Can-02
 // @description  Tentative de rendre l'UI le plus agréable possible
 // @match        https://www.jeuxvideo.com/forums/0-*
@@ -246,9 +246,6 @@
         .buttonsNavbar__button {
             color: #f2f2f2 !important;
             background-color: #272A30 !important;
-            margin: 0 0.3125rem !important;
-            height: 40px !important;
-            padding: 12px !important;
         }
 
         .buttonsNavbar__label {
