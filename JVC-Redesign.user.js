@@ -8,8 +8,8 @@
 // @match        https://www.jeuxvideo.com/forums/42-*
 // @match        https://www.jeuxvideo.com/recherche/forums/0-*
 // @match        https://www.jeuxvideo.com/recherche/forums/42-*
-// @updateURL    https://raw.githubusercontent.com/DreamboxMinerva/JVC-Redesign/main/JVC-Redesign.user.js
-// @downloadURL  https://raw.githubusercontent.com/DreamboxMinerva/JVC-Redesign/main/JVC-Redesign.user.js
+// @updateURL   https://raw.githubusercontent.com/DreamboxMinerva/JVC-Redesign/main/JVC-Redesign.user.js
+// @downloadURL https://raw.githubusercontent.com/DreamboxMinerva/JVC-Redesign/main/JVC-Redesign.user.js
 // @grant        GM_addStyle
 // @run-at       document-start
 // ==/UserScript==
