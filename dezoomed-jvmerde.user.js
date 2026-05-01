@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Dezoomed JVMERDE Edition
+// @name    Dezoomed JVmerde edition
 // @namespace    http://tampermonkey.net/
 // @version      2.5
 // @author       StrangerFruit + BlackArch + Bakuredo + captain_cid31 + herolink + Can-02
