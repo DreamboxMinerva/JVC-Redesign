@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         JVC Redesign - Refonte de l'interface du forum
 // @namespace    http://tampermonkey.net/
-// @version      2.89
+// @version      2.90
 // @author       StrangerFruit + BlackArch + Bakuredo + captain_cid31 + herolink + Can-02
 // @description  Tentative de rendre l'UI le plus agréable possible
 // @match        https://www.jeuxvideo.com/forums/0-*
@@ -15,18 +15,6 @@
 // @run-at       document-start
 // ==/UserScript==
 
-(function() {
-    'use strict';
-
-    if (location.pathname.includes('/forums/42-')) {
-        GM_addStyle(`
-            .icon-trash {
-                color: #e4606d !important;
-                filter: brightness(0.80) !important;
-            }
-        `);
-    }
-})();
 
 (function() {
     'use strict';
@@ -59,11 +47,10 @@
 
 
         /* ── Signature ── */
-        .messageUser__signature {
-            margin-top: 10px !important; padding-left: 0px !important; font-size: 0.85em !important; margin-bottom: 0px !important;
-        }
+
         .messageUser__separator {
-            border-top: 0.0625rem solid var(--border-color); width: 100%; margin-bottom: -2px;
+            border-top: 0.0625rem solid var(--border-color); width: 100%;
+
         }
 
         .tablesForum__subjectText {
@@ -102,39 +89,6 @@
             display: inline-block;
         }
 
-        /* ───────────────────────────────────────────── */
-        /* ICÔNES COLORÉES - Sans bordure, sans fond    */
-        /* ───────────────────────────────────────────── */
-
-        .messageUser__action:has(.icon-kick),
-        .messageUser__action:has(.icon-trash),
-        .messageUser__action:has(.icon-topic-restore) {
-            border: none !important;
-            background: none !important;
-            background-color: transparent !important;
-            box-shadow: none !important;
-            outline: none !important;
-        }
-
-        .messageUser__actionIcon.icon-kick-active {
- filter: invert(58%) sepia(98%) saturate(2000%) hue-rotate(0deg) brightness(0.80) !important;
-}
-
-        /* Icône KICK - ORANGE */
-        .icon-kick {
-            filter: invert(58%) sepia(98%) saturate(2000%) hue-rotate(0deg) brightness(0.80) !important;
-        }
-
-        /* Icône DDB - Jaune */
-        .icon-signaler {
-            color: #D7D764 !important;
-            filter: brightness(0.80) !important;
-        }
-
-        /* Icône RESTAURER - VERT */
-        .icon-topic-restore {
-            filter: invert(58%) sepia(78%) saturate(600%) hue-rotate(70deg) brightness(0.80) !important;
-        }
 
         /* ── Divers ── */
         .tablesForum__remainingAvatars, .tablesForum__separator { display: none !important; }
