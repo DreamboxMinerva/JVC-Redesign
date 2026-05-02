@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         JVC Redesign - Refonte de l'interface du forum
 // @namespace    http://tampermonkey.net/
-// @version      2.88
+// @version      2.89
 // @author       StrangerFruit + BlackArch + Bakuredo + captain_cid31 + herolink + Can-02
 // @description  Tentative de rendre l'UI le plus agréable possible
 // @match        https://www.jeuxvideo.com/forums/0-*
@@ -57,27 +57,6 @@
             padding-bottom: 0.5px !important;
         }
 
-        /* ── Messages : grid pour footer en haut à droite ── */
-        .messageUser__card {
-            display: grid !important;
-            grid-template-areas: "header footer" "main main" !important;
-            grid-template-columns: 1fr auto !important;
-            grid-template-rows: auto 1fr !important;
-            padding: 4px 8px !important;
-            border-left: none !important;
-        }
-        .messageUser__header { grid-area: header !important; margin-bottom: 4px !important; }
-        .messageUser__main   { grid-area: main !important; }
-        .messageUser__footer {
-            grid-area: footer !important;
-            display: flex !important; align-items: flex-start !important;
-            gap: 4px !important; padding: 4px 0 0 0 !important; margin: 0 !important;
-            border-top: none !important; opacity: 0.5 !important; transition: opacity 0.2s !important;
-        }
-        .messageUser__card:hover .messageUser__footer,
-        .messageUser__footer:hover { opacity: 1 !important; }
-        .messageUser__overlay { pointer-events: none !important; }
-        .messageUser { margin-bottom: 4px !important; }
 
         /* ── Signature ── */
         .messageUser__signature {
@@ -97,13 +76,6 @@
             overflow: visible !important;
         }
 
-        .messageUser__header {
-            margin-bottom: 0.9375rem !important;
-        }
-
-        .messageUser__card {
-            padding: 14px !important;
-        }
 
         .messageUser__msg span.message__urlImg {
             display: inline-block !important;
@@ -246,6 +218,8 @@
         .buttonsNavbar__button {
             color: #f2f2f2 !important;
             background-color: #272A30 !important;
+           padding-left: 2px;
+          padding-right: 4px;
         }
 
         .buttonsNavbar__label {
@@ -266,21 +240,18 @@
             background-color: #272A30 !important;
             color: #F66031 !important;
         }
+
+.listActions {
+    margin-left: -8px;
+}
+
+
+.tablesForum--hotTopics, .tablesForum--listTopicsWithActions, .tablesForum--listTopics {
+    --tables-forums-icon-size: 24px;
+}
+
+
     `);
-
-    // ─── Helpers ───────────────────────────────────
-    const isTopic     = () => window.location.pathname.startsWith('/forums/42-');
-    const getForumUrl = () => {
-        if (isTopic()) {
-            const bread = document.querySelectorAll('.breadcrumb__item');
-            for (const item of bread) {
-                if (item.href && item.href.includes('/forums/0-')) return item.href;
-            }
-            return null;
-        }
-        return window.location.href.split('#')[0];
-    };
-
 
 
 })();
