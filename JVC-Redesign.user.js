@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         JVC Redesign - Refonte de l'interface du forum
 // @namespace    http://tampermonkey.net/
-// @version      2.90
+// @version      2.91
 // @author       StrangerFruit + BlackArch + Bakuredo + captain_cid31 + herolink + Can-02
 // @description  Tentative de rendre l'UI le plus agréable possible
 // @match        https://www.jeuxvideo.com/forums/0-*
@@ -199,6 +199,9 @@
     margin-left: -8px;
 }
 
+.messageUser__level {
+    color: var(--jv-text-muted-color);
+}
 
 .tablesForum--hotTopics, .tablesForum--listTopicsWithActions, .tablesForum--listTopics {
     --tables-forums-icon-size: 24px;
