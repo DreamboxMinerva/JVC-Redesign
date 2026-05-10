@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         JVC Redesign - Refonte de l'interface du forum
 // @namespace    http://tampermonkey.net/
-// @version      2.96
+// @version      2.94
 // @author       StrangerFruit + BlackArch + Bakuredo + captain_cid31 + herolink + Can-02
 // @description  Tentative de rendre l'UI le plus agréable possible
 // @match        https://www.jeuxvideo.com/forums/0-*
@@ -37,13 +37,29 @@
     const applyTheme = () => {
         let isDark = isDarkByStorage();
         if (isDark === null) isDark = isDarkByDOM();
-        if (isDark === null) isDark = true; // défaut dark
+        if (isDark === null) isDark = true;
         document.documentElement.classList.remove('jvcr-dark', 'jvcr-light');
         document.documentElement.classList.add(isDark ? 'jvcr-dark' : 'jvcr-light');
     };
 
     applyTheme();
     window.addEventListener('DOMContentLoaded', () => applyTheme());
+
+    // ─── Barre dupliquée : observer dès le début ───
+    const obs = new MutationObserver(() => {
+        if (tryInjectBottomBar()) obs.disconnect();
+    });
+
+    const startObs = () => {
+        if (document.body) {
+            obs.observe(document.body, { childList: true, subtree: true });
+        } else {
+            new MutationObserver((_, o) => {
+                if (document.body) { o.disconnect(); obs.observe(document.body, { childList: true, subtree: true }); }
+            }).observe(document.documentElement, { childList: true });
+        }
+    };
+    startObs();
 
     GM_addStyle(`
         /* Dé-stickifier la barre native */
@@ -74,6 +90,10 @@
             border-top: 0.0625rem solid var(--border-color); width: 100%;
         }
 
+.container__postTitle {
+   display:none !important;;
+}
+
         .tablesForum__subjectText {
             font-weight: 500 !important;
             font-size: 14px !important;
@@ -83,6 +103,10 @@
             min-height: 0 !important;
             overflow: visible !important;
         }
+
+.buttonsNavbar {
+    box-shadow: none !important;;
+}
 
         .messageUser__msg span.message__urlImg {
             display: inline-block !important;
@@ -117,6 +141,7 @@
             line-height: 1.25 !important; word-break: break-word !important;
         }
 
+
         /* ── Visités ── */
         .tablesForum__subjectText a:visited,
         .tablesForum__subjectLink:visited,
@@ -143,6 +168,13 @@
         .layout__contentAside.layout__row--gutter {
             margin-left: 6px !important;
         }
+
+
+
+
+.messageEditor__containerEdit {
+    margin-top: 8px !important;
+}
 
         .layout--videoLarge .layout__contentMain,
         .layout--alternate .layout__contentHeader,
@@ -180,19 +212,16 @@
 
         .jvcr-dark .buttonsNavbar__button:hover,
         .jvcr-dark .buttonsNavbar__button:active,
-        .jvcr-dark .buttonsNavbar__button:focus
-{
+        .jvcr-dark .buttonsNavbar__button:focus {
             background-color: #272A30 !important;
             color: #F66031 !important;
         }
 
         .messageUser__label:hover,
         .messageUser__label:active,
-        .messageUser__label:focus
-{
+        .messageUser__label:focus {
             color: #F66031 !important;
         }
-
 
         .tablesForum,
         .buttonsNavbar,
@@ -234,7 +263,118 @@
         .messageUser__actionIcon.icon-kick-active {
             filter: invert(58%) sepia(98%) saturate(2000%) hue-rotate(0deg) brightness(0.80) !important;
         }
+
+
+
+        /* ── Barre dupliquée en bas ── */
+        #jvcr-bottom-bar {
+            margin: 10px 0 6px 0;
+        }
+        #jvcr-bottom-bar .buttonsNavbar {
+            display: flex !important;
+            align-items: center !important;
+            padding-left: 18px !important;
+          margin-top: -14px !important;
+        }
+
+
+.pagination {
+    margin-top: -12px;
+}
+
+.container__pagination {
+    margin-bottom: 10px;
+}
+
+
     `);
+
+    // ─── Helpers ───────────────────────────────────
+    const isTopic = () => window.location.pathname.startsWith('/forums/42-');
+
+    // ─── Barre dupliquée en bas ────────────────────
+    const buildBottomBar = () => {
+        const sourceNavbar = document.querySelector('.buttonsNavbar');
+        if (!sourceNavbar) return null;
+
+        const sourceBtns = sourceNavbar.querySelectorAll(':scope > .buttonsNavbar__button');
+        if (!sourceBtns.length) return null;
+
+        const nav = document.createElement('div');
+        nav.className = 'buttonsNavbar';
+
+        sourceBtns.forEach((sourceBtn) => {
+            if (sourceBtn.querySelector('.icon-reply')) return;
+            if (sourceBtn.classList.contains('btn-jvchat')) return;
+
+            if (sourceBtn.querySelector('.icon-refresh')) {
+                const btn = document.createElement('button');
+                btn.className = sourceBtn.className;
+                btn.innerHTML = sourceBtn.innerHTML;
+                btn.style.cssText = 'margin-left: auto !important;';
+                btn.addEventListener('click', () => location.reload());
+                nav.appendChild(btn);
+            } else {
+                nav.appendChild(sourceBtn.cloneNode(true));
+            }
+        });
+
+        return nav;
+    };
+
+    const tryInjectBottomBar = () => {
+        if (!isTopic()) return false;
+
+        const sourceNavbar = document.querySelector('.buttonsNavbar');
+        if (!sourceNavbar) return false;
+
+        const sourceBtns = sourceNavbar.querySelectorAll(':scope > .buttonsNavbar__button');
+        if (!sourceBtns.length) return false;
+
+        const allPagi = [...document.querySelectorAll('.container__pagination')]
+            .filter(el => !el.classList.contains('js-pagination-top'));
+        if (!allPagi.length) return false;
+        const bottomPagi = allPagi[allPagi.length - 1];
+
+        const existing = document.getElementById('jvcr-bottom-bar');
+        if (existing) {
+            const existingBtns = existing.querySelectorAll('.buttonsNavbar__button').length;
+            const expectedBtns = [...sourceBtns].filter(b =>
+                !b.querySelector('.icon-reply') && !b.classList.contains('btn-jvchat')
+            ).length;
+            if (
+                existing.previousElementSibling === bottomPagi &&
+                existingBtns === expectedBtns
+            ) return true;
+            existing.remove();
+        }
+
+        const bar = buildBottomBar();
+        if (!bar) return false;
+
+        const wrapper = document.createElement('div');
+        wrapper.id = 'jvcr-bottom-bar';
+        wrapper.appendChild(bar);
+
+        bottomPagi.insertAdjacentElement('afterend', wrapper);
+        return true;
+    };
+
+    window.addEventListener('DOMContentLoaded', () => {
+        applyTheme();
+        if (isTopic()) tryInjectBottomBar();
+    });
+
+    // Intervalle court au début pour capter les boutons ajoutés par d'autres scripts (ex: JVChat)
+    let intervalCount = 0;
+    const fastInterval = setInterval(() => {
+        if (isTopic()) tryInjectBottomBar();
+        intervalCount++;
+        if (intervalCount >= 20) {
+            clearInterval(fastInterval);
+            setInterval(() => { if (isTopic()) tryInjectBottomBar(); }, 5000);
+        }
+    }, 500);
 
 })();
 
