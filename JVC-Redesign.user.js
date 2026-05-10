@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         JVC Redesign - Refonte de l'interface du forum
 // @namespace    http://tampermonkey.net/
-// @version      2.95
+// @version      2.96
 // @author       StrangerFruit + BlackArch + Bakuredo + captain_cid31 + herolink + Can-02
 // @description  Tentative de rendre l'UI le plus agréable possible
 // @match        https://www.jeuxvideo.com/forums/0-*
@@ -18,16 +18,32 @@
 (function() {
     'use strict';
 
-    // ── Thème : applique une classe sur <html> ──
-    const applyTheme = () => {
+    // ── Détection du thème ──
+    const isDarkByStorage = () => {
         const themeKey = localStorage.getItem('theme');
-        const isDark = themeKey
-            ? themeKey === 'theme-dark'
-            : localStorage.getItem('topiclive_dark_mode') === 'true';
+        if (themeKey) return themeKey === 'theme-dark';
+        const darkMode = localStorage.getItem('topiclive_dark_mode');
+        if (darkMode !== null) return darkMode === 'true';
+        return null;
+    };
+
+    const isDarkByDOM = () => {
+        const cl = document.documentElement.classList;
+        if (cl.contains('theme-dark')) return true;
+        if (cl.contains('theme-light')) return false;
+        return null;
+    };
+
+    const applyTheme = () => {
+        let isDark = isDarkByStorage();
+        if (isDark === null) isDark = isDarkByDOM();
+        if (isDark === null) isDark = true; // défaut dark
         document.documentElement.classList.remove('jvcr-dark', 'jvcr-light');
         document.documentElement.classList.add(isDark ? 'jvcr-dark' : 'jvcr-light');
     };
+
     applyTheme();
+    window.addEventListener('DOMContentLoaded', () => applyTheme());
 
     GM_addStyle(`
         /* Dé-stickifier la barre native */
@@ -164,10 +180,19 @@
 
         .jvcr-dark .buttonsNavbar__button:hover,
         .jvcr-dark .buttonsNavbar__button:active,
-        .jvcr-dark .buttonsNavbar__button:focus {
+        .jvcr-dark .buttonsNavbar__button:focus
+{
             background-color: #272A30 !important;
             color: #F66031 !important;
         }
+
+        .messageUser__label:hover,
+        .messageUser__label:active,
+        .messageUser__label:focus
+{
+            color: #F66031 !important;
+        }
+
 
         .tablesForum,
         .buttonsNavbar,
