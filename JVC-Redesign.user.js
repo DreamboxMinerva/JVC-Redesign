@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         JVC Redesign - Refonte de l'interface du forum
 // @namespace    http://tampermonkey.net/
-// @version      2.91
+// @version      2.95
 // @author       StrangerFruit + BlackArch + Bakuredo + captain_cid31 + herolink + Can-02
 // @description  Tentative de rendre l'UI le plus agréable possible
 // @match        https://www.jeuxvideo.com/forums/0-*
@@ -15,10 +15,19 @@
 // @run-at       document-start
 // ==/UserScript==
 
-
 (function() {
     'use strict';
 
+    // ── Thème : applique une classe sur <html> ──
+    const applyTheme = () => {
+        const themeKey = localStorage.getItem('theme');
+        const isDark = themeKey
+            ? themeKey === 'theme-dark'
+            : localStorage.getItem('topiclive_dark_mode') === 'true';
+        document.documentElement.classList.remove('jvcr-dark', 'jvcr-light');
+        document.documentElement.classList.add(isDark ? 'jvcr-dark' : 'jvcr-light');
+    };
+    applyTheme();
 
     GM_addStyle(`
         /* Dé-stickifier la barre native */
@@ -29,8 +38,7 @@
         }
 
         /* Contrer le forçage mobile du site :
-           en dessous de 612px JVC force order:2 + bottom sur ce sélecteur,
-           on l'écrase avec !important dans le même media query */
+           en dessous de 612px JVC force order:2 + bottom sur ce sélecteur */
         @media (max-width: 611.98px) {
             .buttonsNavbar__sticky {
                 position: relative !important;
@@ -45,12 +53,9 @@
             padding-bottom: 0.5px !important;
         }
 
-
         /* ── Signature ── */
-
         .messageUser__separator {
             border-top: 0.0625rem solid var(--border-color); width: 100%;
-
         }
 
         .tablesForum__subjectText {
@@ -62,7 +67,6 @@
             min-height: 0 !important;
             overflow: visible !important;
         }
-
 
         .messageUser__msg span.message__urlImg {
             display: inline-block !important;
@@ -88,7 +92,6 @@
             padding-bottom: 0;
             display: inline-block;
         }
-
 
         /* ── Divers ── */
         .tablesForum__remainingAvatars, .tablesForum__separator { display: none !important; }
@@ -140,8 +143,30 @@
             margin-left: -6px !important;
         }
 
-        .buttonsNavbar {
+        /* ── Navbar : tout custom uniquement en dark mode ── */
+        .jvcr-dark .buttonsNavbar {
             background-color: #272A30 !important;
+        }
+
+        .jvcr-dark .buttonsNavbar__button {
+            color: #f2f2f2 !important;
+            background-color: #272A30 !important;
+            padding-left: 2px;
+            padding-right: 4px;
+        }
+
+        .jvcr-dark .buttonsNavbar__label {
+            display: block !important;
+            font-size: 15px !important;
+            font-weight: 500 !important;
+            line-height: 1 !important;
+        }
+
+        .jvcr-dark .buttonsNavbar__button:hover,
+        .jvcr-dark .buttonsNavbar__button:active,
+        .jvcr-dark .buttonsNavbar__button:focus {
+            background-color: #272A30 !important;
+            color: #F66031 !important;
         }
 
         .tablesForum,
@@ -150,7 +175,7 @@
         .messageEditor__containerEdit,
         .messageEditor__containerPreview,
         .survey__addSurvey,
-       .messageUser__card,
+        .messageUser__card,
         .topicTitle__input {
             border-radius: 8px !important;
         }
@@ -169,47 +194,22 @@
             padding-top: 4px !important;
         }
 
-        .buttonsNavbar__button {
-            color: #f2f2f2 !important;
-            background-color: #272A30 !important;
-           padding-left: 2px;
-          padding-right: 4px;
+        .listActions {
+            margin-left: -8px;
         }
 
-        .buttonsNavbar__label {
-            display: block !important;
-            font-size: 15px !important;
-            font-weight: 500 !important;
-            line-height: 1 !important;
+        .messageUser__level {
+            color: var(--jv-text-muted-color);
         }
 
-        .buttonsNavbar__button--highlighted:hover,
-        .buttonsNavbar__button--highlighted:active,
-        .buttonsNavbar__button--highlighted:focus {
-            background-color: #272A30 !important;
-            color: #F66031 !important;
+        .tablesForum--hotTopics, .tablesForum--listTopicsWithActions, .tablesForum--listTopics {
+            --tables-forums-icon-size: 22px;
         }
 
-        .buttonsNavbar__button:has(.icon-refresh):hover {
-            background-color: #272A30 !important;
-            color: #F66031 !important;
+        .messageUser__actionIcon.icon-kick-active {
+            filter: invert(58%) sepia(98%) saturate(2000%) hue-rotate(0deg) brightness(0.80) !important;
         }
-
-.listActions {
-    margin-left: -8px;
-}
-
-.messageUser__level {
-    color: var(--jv-text-muted-color);
-}
-
-.tablesForum--hotTopics, .tablesForum--listTopicsWithActions, .tablesForum--listTopics {
-    --tables-forums-icon-size: 24px;
-}
-
-
     `);
-
 
 })();
 
