@@ -2,7 +2,7 @@
 // @name         JVC Redesign - Refonte de l'interface du forum
 // @namespace    http://tampermonkey.net/
 // @version      3.5
-// @author       StrangerFruit + BlackArch + Bakuredo + captain_cid31 + herolink + Can-02
+// @author       StrangerFruit, sur la base d'un script de BlackArch + Bakuredo + captain_cid31 + herolink + Can-02
 // @description  Tentative de rendre l'UI le plus agréable possible
 // @match        https://www.jeuxvideo.com/forums/0-*
 // @match        https://www.jeuxvideo.com/forums/42-*
