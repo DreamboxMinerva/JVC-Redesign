@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         JVC Redesign - Refonte de l'interface du forum
 // @namespace    http://tampermonkey.net/
-// @version      3.6
+// @version      3.7
 // @author       StrangerFruit, sur la base d'un script de BlackArch + Bakuredo + captain_cid31 + herolink + Can-02
 // @description  Tentative de rendre l'UI le plus agréable possible
 // @match        https://www.jeuxvideo.com/forums/0-*
@@ -123,6 +123,10 @@
             border-radius: 0rem !important;
         }
 
+.backTo__icon {
+    margin-bottom: 3px !important;
+}
+
         .messageUser__msg a span.message__urlImgLarge {
             height: 150px;
             width: 200px;
@@ -227,15 +231,15 @@
             border-radius: 8px !important;
         }
 
+
+
+
         .forumSearchBar__form,
         .buttonsNavbar__button,
-        .simpleButton {
+        .simpleButton, .topicResolve,    .userParameters   {
             border-radius: 10px !important;
         }
 
-        .userParameters {
-            border-radius: 12px !important;
-        }
 
         .forumSearchBar__formInput {
             padding-top: 4px !important;
