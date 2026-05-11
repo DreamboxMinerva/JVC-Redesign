@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         JVC Redesign - Refonte de l'interface du forum
 // @namespace    http://tampermonkey.net/
-// @version      3.0
-// @author       StrangerFruit + BlackArch + Bakuredo + captain_cid31 + herolink + Can-02
+// @version      3.5
+// @author       StrangerFruit, sur une base de : BlackArch + Bakuredo + captain_cid31 + herolink + Can-02
 // @description  Tentative de rendre l'UI le plus agréable possible
 // @match        https://www.jeuxvideo.com/forums/0-*
 // @match        https://www.jeuxvideo.com/forums/42-*
@@ -69,8 +69,6 @@
             order: 0 !important;
         }
 
-        /* Contrer le forçage mobile du site :
-           en dessous de 612px JVC force order:2 + bottom sur ce sélecteur */
         @media (max-width: 611.98px) {
             .buttonsNavbar__sticky {
                 position: relative !important;
@@ -85,14 +83,13 @@
             padding-bottom: 0.5px !important;
         }
 
-        /* ── Signature ── */
         .messageUser__separator {
             border-top: 0.0625rem solid var(--border-color); width: 100%;
         }
 
-.container__postTitle {
-   display:none !important;;
-}
+        .container__postTitle {
+            display: none !important;
+        }
 
         .tablesForum__subjectText {
             font-weight: 500 !important;
@@ -104,9 +101,9 @@
             overflow: visible !important;
         }
 
-.buttonsNavbar {
-    box-shadow: none !important;;
-}
+        .buttonsNavbar {
+            box-shadow: none !important;
+        }
 
         .messageUser__msg span.message__urlImg {
             display: inline-block !important;
@@ -141,7 +138,6 @@
             line-height: 1.25 !important; word-break: break-word !important;
         }
 
-
         /* ── Visités ── */
         .tablesForum__subjectText a:visited,
         .tablesForum__subjectLink:visited,
@@ -169,12 +165,9 @@
             margin-left: 6px !important;
         }
 
-
-
-
-.messageEditor__containerEdit {
-    margin-top: 8px !important;
-}
+        .messageEditor__containerEdit {
+            margin-top: 8px !important;
+        }
 
         .layout--videoLarge .layout__contentMain,
         .layout--alternate .layout__contentHeader,
@@ -191,7 +184,7 @@
             margin-left: -6px !important;
         }
 
-        /* ── Navbar : tout custom uniquement en dark mode ── */
+        /* ── Navbar dark mode ── */
         .jvcr-dark .buttonsNavbar {
             background-color: #272A30 !important;
         }
@@ -264,8 +257,6 @@
             filter: invert(58%) sepia(98%) saturate(2000%) hue-rotate(0deg) brightness(0.80) !important;
         }
 
-
-
         /* ── Barre dupliquée en bas ── */
         #jvcr-bottom-bar {
             margin: 10px 0 6px 0;
@@ -274,19 +265,59 @@
             display: flex !important;
             align-items: center !important;
             padding-left: 18px !important;
-          margin-top: -14px !important;
+            margin-top: -10px !important;
         }
 
+        /* ── Toolbar aligné avec la pagination ── */
+        .pagination {
+            margin-top: -8px !important;
+        }
 
-.pagination {
-    margin-top: -12px;
-}
+        .container__pagination {
+            margin-bottom: 12px !important;
+        }
 
-.container__pagination {
-    margin-bottom: 10px;
-}
+        /* En large : Bloquer/Marquer remonté au niveau de la pagination */
+        .listActions {
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            margin-bottom: 20px !important;
+            margin-top: -54px !important;
+            z-index: 1 !important;
+            position: relative !important;
+        }
 
+        /* En dessous de 1260px : retour au comportement natif avec espace en bas */
+        @media (max-width: 1260px) {
+            .listActions {
+                margin-top: 0 !important;
+                margin-bottom: 8px !important;
+                position: static !important;
+                z-index: auto !important;
+            }
+        }
 
+        .pagination__navigation--zone1 .pagination__button:nth-child(-n+10),
+        .pagination__navigation--zone1 .pagination__item:nth-child(-n+10) {
+            order: 2 !important;
+            z-index: 2 !important;
+            position: relative !important;
+        }
+
+        .pagination__navigation--zone2 .pagination__button:nth-child(-n+9),
+        .pagination__navigation--zone2 .pagination__item:nth-child(-n+9) {
+            order: 2 !important;
+            z-index: 2 !important;
+            position: relative !important;
+        }
+
+        .pagination__navigation--zone3 .pagination__button:nth-child(-n+8),
+        .pagination__navigation--zone3 .pagination__item:nth-child(-n+8) {
+            order: 2 !important;
+            z-index: 2 !important;
+            position: relative !important;
+        }
     `);
 
     // ─── Helpers ───────────────────────────────────
@@ -365,7 +396,6 @@
         if (isTopic()) tryInjectBottomBar();
     });
 
-    // Intervalle court au début pour capter les boutons ajoutés par d'autres scripts (ex: JVChat)
     let intervalCount = 0;
     const fastInterval = setInterval(() => {
         if (isTopic()) tryInjectBottomBar();
