@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         JVC Redesign - Refonte de l'interface du forum
 // @namespace    http://tampermonkey.net/
-// @version      4.0
-// @author       StrangerFruit, sur la base d'un script de BlackArch + Bakuredo + captain_cid31 + herolink + Can-02 
+// @version      4.01
+// @author       StrangerFruit, sur la base d'un script de BlackArch + Bakuredo + captain_cid31 + herolink + Can-02
 // @description  Tentative de rendre l'UI le plus agréable possible
 // @match        https://www.jeuxvideo.com/recherche/forums/*
 // @match        https://www.jeuxvideo.com/forums/message/*
 // @match        https://www.jeuxvideo.com/forums/*
+// @match        https://www.jeuxvideo.com/*
 // @updateURL   https://raw.githubusercontent.com/DreamboxMinerva/JVC-Redesign/main/JVC-Redesign.user.js?nocache=1
 // @downloadURL https://raw.githubusercontent.com/DreamboxMinerva/JVC-Redesign/main/JVC-Redesign.user.js?nocache=1
 // @grant        unsafeWindow
@@ -53,7 +54,7 @@
     // ─── CSS injecté le plus tôt possible (évite le flash du header d'origine) ───
     const styleJVCR = document.createElement('style');
     styleJVCR.textContent = `
-        /* ── Palette (reprise de JVClean, thème sombre uniquement) ── */
+        /* ── Palette ── */
         html.jvcr-dark,
         html.jvcr-dark * {
             --jv-header-bg-color: #18191b !important;
@@ -370,7 +371,7 @@
     `;
     root.appendChild(styleJVCR);
 
-    // ─── Bandeau compact forcé sur grand écran (repris de JVClean) ───
+    // ─── Bandeau compact forcé sur grand écran  ───
     const grandEcran = window.matchMedia('(min-width: 75em)');
     const classesCompactes = ['jvHeader--affix', 'header-main-compact'];
     let headerCourant = null;
