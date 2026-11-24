@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         JVC Redesign - Refonte de l'interface du forum
 // @namespace    http://tampermonkey.net/
-// @version      4.01
+// @version      4.02
 // @author       StrangerFruit, sur la base d'un script de BlackArch + Bakuredo + captain_cid31 + herolink + Can-02
 // @description  Tentative de rendre l'UI le plus agréable possible
 // @match        https://www.jeuxvideo.com/recherche/forums/*
@@ -64,9 +64,18 @@
             --jv-block-bg-color: #2e3238 !important;
             --jv-block-even-bg-color: #363e49 !important;
             --jv-link-color: #7dc3f7 !important;
+            --jv-text-primary: #3d87f5 !important;
+            --jv-text-hover-primary: #5596f6 !important;
             --tables-forums-pin-off: #ff4d39 !important;
             --tables-forums-folder2: #ff4d39 !important;
-        }
+            --tables-forums-pin-on: #99CC00 !important;
+            .header-quick-access-link:hover {
+        color: #F66031;
+        background: none;
+    }
+            }
+
+
 
         /* ── Bandeau compact : pas d'animation, logo et accès rapides figés ── */
         @media (min-width: 75em) {
@@ -102,6 +111,10 @@
         @keyframes jvcr-header-failsafe {
             to { visibility: visible; }
         }
+
+.header-main .header-main-search-icon.ui-icons {
+    padding-bottom: 1px;
+}
 
         .header__bottom {
             height: 0 !important;
@@ -197,7 +210,6 @@
         a.tablesForum__subjectLink:visited { color: #777 !important; }
         a.pagination__button:visited { color: #aaa !important; border-color: #555 !important; }
         html.theme-dark a.pagination__button:visited { color: #666 !important; border-color: #444 !important; }
-        .tablesForum__bodyRow a:visited { color: var(--jv-text-muted-color) !important; }
 
         /* ── Layout ── */
         @media (min-width: 1400px) {
